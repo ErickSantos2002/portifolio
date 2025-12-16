@@ -56,6 +56,10 @@ export const About = () => {
                 Sou um profissional apaixonado por tecnologia, especializado em{' '}
                 <span className="font-semibold text-primary-600 dark:text-primary-400">
                   ciência de dados
+                </span>
+                ,{' '}
+                <span className="font-semibold text-primary-600 dark:text-primary-400">
+                  inteligência artificial
                 </span>{' '}
                 e{' '}
                 <span className="font-semibold text-primary-600 dark:text-primary-400">
@@ -67,12 +71,21 @@ export const About = () => {
               <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                 Com experiência em Python, FastAPI, React e Node.js, desenvolvo
                 soluções completas que vão desde a análise e processamento de
-                dados até interfaces modernas e responsivas.
+                dados até interfaces modernas e responsivas. Integro{' '}
+                <span className="font-semibold text-primary-600 dark:text-primary-400">
+                  modelos de IA
+                </span>{' '}
+                em aplicações práticas, criando sistemas inteligentes que automatizam
+                processos e geram valor real.
               </p>
 
               <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                 Meu foco está em criar aplicações que não apenas funcionam bem,
-                mas que também são intuitivas, escaláveis e baseadas em dados.
+                mas que também são intuitivas, escaláveis e potencializadas por{' '}
+                <span className="font-semibold text-primary-600 dark:text-primary-400">
+                  machine learning
+                </span>{' '}
+                e análise de dados para tomar decisões mais inteligentes.
               </p>
 
               {/* Stats */}
