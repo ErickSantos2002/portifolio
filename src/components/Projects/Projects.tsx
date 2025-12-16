@@ -1,49 +1,133 @@
+import { useState, useEffect } from 'react';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import type { Project } from '../../types';
 
 /**
- * Lista de projetos do portfólio
- * TODO: Substituir com dados reais e adicionar mais projetos
+ * Lista completa de projetos do portfólio
  */
 export const projects: Project[] = [
   {
     id: '1',
-    title: 'ControlHS - Dashboard',
+    title: 'DataCoreHS',
     description:
-      'Sistema completo de controle e gestão com dashboard intuitivo, visualizações de dados em tempo real e relatórios personalizados.',
-    image: '/projects/controlhs-dashboard-web.png',
-    tags: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL'],
+      'Sistema completo de análise de dados financeiros integrado com ERP, oferecendo dashboards interativos, relatórios personalizados e análise preditiva para tomada de decisões estratégicas.',
+    image: '/projects/datacore.png',
+    tags: ['Python', 'FastAPI', 'React', 'PostgreSQL'],
     featured: true,
   },
   {
     id: '2',
-    title: 'ControlHS - Inventário',
+    title: 'ChamadosHS',
     description:
-      'Módulo de controle de inventário com rastreamento de estoque, alertas automáticos e gerenciamento de produtos.',
-    image: '/projects/controlhs-inventário-web.png',
-    tags: ['React', 'Python', 'FastAPI'],
+      'Plataforma interna de gestão de chamados técnicos com sistema de priorização inteligente, acompanhamento em tempo real e métricas de desempenho para suporte eficiente.',
+    image: '/projects/chamados.png',
+    tags: ['React', 'TypeScript', 'Node.js', 'MongoDB'],
   },
   {
     id: '3',
-    title: 'ControlHS - Transferências',
+    title: 'ControlHS',
     description:
-      'Sistema de gerenciamento de transferências entre locais, com histórico completo e validações automáticas.',
-    image: '/projects/controlhs-trasnferencias-web.png',
-    tags: ['React', 'TypeScript', 'Node.js'],
+      'Sistema robusto de controle patrimonial empresarial, permitindo rastreamento completo de ativos, histórico de movimentações e relatórios de inventário automatizados.',
+    image: '/projects/control.png',
+    tags: ['React', 'FastAPI', 'PostgreSQL', 'Python'],
   },
   {
     id: '4',
-    title: 'ControlHS - Baixas',
+    title: 'HealthScore',
     description:
-      'Módulo para controle de baixas de estoque, com aprovações em múltiplos níveis e auditoria completa.',
-    image: '/projects/controlhs-baixas-web.png',
-    tags: ['React', 'FastAPI', 'Python'],
+      'Plataforma de treinamento de vendedores potencializada por IA, gerando objeções personalizadas por empresa e oferecendo análise de desempenho em tempo real para capacitação contínua.',
+    image: '/projects/healthscore.png',
+    tags: ['Python', 'FastAPI', 'React', 'OpenAI'],
+    featured: true,
+  },
+  {
+    id: '5',
+    title: 'Automações n8n & Python',
+    description:
+      'Conjunto de automações empresariais desenvolvidas com n8n e Python, otimizando processos repetitivos, integrando sistemas e aumentando produtividade operacional.',
+    image: '/projects/automacoes.png',
+    tags: ['Python', 'n8n', 'API Integration', 'Automation'],
+  },
+  {
+    id: '6',
+    title: 'Comprai',
+    description:
+      'Sistema automatizado de postagem de promoções da Shopee, com web scraping inteligente, análise de preços e publicação programada em múltiplos canais.',
+    image: '/projects/comprai.png',
+    tags: ['Python', 'Selenium', 'FastAPI', 'PostgreSQL'],
+  },
+  {
+    id: '7',
+    title: 'EBSoftware',
+    description:
+      'Software desktop desenvolvido em Python integrado com bafômetro digital EBS, realizando testes automatizados com interface intuitiva e armazenamento completo de registros.',
+    image: '/projects/ebsoftware.png',
+    tags: ['Python', 'PyQt', 'Serial Communication', 'SQLite'],
+  },
+  {
+    id: '8',
+    title: 'HealthApp',
+    description:
+      'Aplicativo mobile multiplataforma (Android/iOS) para testes com bafômetro, conexão Bluetooth com múltiplos dispositivos e sincronização local de todos os registros.',
+    image: '/projects/healthapp.png',
+    tags: ['React Native', 'TypeScript', 'Bluetooth', 'SQLite'],
+  },
+  {
+    id: '9',
+    title: 'Suporte WhatsApp IA',
+    description:
+      'Sistema inteligente de atendimento automatizado via WhatsApp utilizando IA, oferecendo respostas contextuais, roteamento inteligente e histórico completo de conversas.',
+    image: '/projects/suporte-whatsapp.png',
+    tags: ['Python', 'FastAPI', 'OpenAI', 'WhatsApp API'],
+  },
+  {
+    id: '10',
+    title: 'GranaIA',
+    description:
+      'Assistente financeiro pessoal via WhatsApp potencializado por IA, oferecendo controle de gastos, análise de padrões financeiros e recomendações personalizadas em tempo real.',
+    image: '/projects/granaia.png',
+    tags: ['Python', 'OpenAI', 'FastAPI', 'PostgreSQL'],
+    featured: true,
   },
 ];
 
 export const Projects = () => {
   const titleRef = useScrollReveal();
   const gridRef = useScrollReveal({ threshold: 0.1 });
+
+  // Estado para controlar a página atual
+  const [currentPage, setCurrentPage] = useState(0);
+  const PROJECTS_PER_PAGE = 4;
+
+  // Estado para controlar o modal de imagem
+  const [selectedImage, setSelectedImage] = useState<{ src: string; title: string } | null>(null);
+
+  // Calcula o número total de páginas
+  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+
+  // Projetos da página atual
+  const startIndex = currentPage * PROJECTS_PER_PAGE;
+  const currentProjects = projects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
+
+  // Preenche com cards "Em breve" se necessário
+  const emptySlots = PROJECTS_PER_PAGE - currentProjects.length;
+
+  // Carrossel automático - avança a cada 5 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPage((prev) => {
+        // Se chegou na última página, volta para a primeira
+        if (prev === totalPages - 1) {
+          return 0;
+        }
+        // Senão, avança para a próxima
+        return prev + 1;
+      });
+    }, 5000); // 5 segundos
+
+    // Limpa o interval quando o componente desmontar
+    return () => clearInterval(interval);
+  }, [totalPages]);
 
   return (
     <section id="projects" className="section-padding bg-gray-50 dark:bg-gray-900/50">
@@ -63,14 +147,18 @@ export const Projects = () => {
         {/* Projects Grid */}
         <div ref={gridRef} className="max-w-7xl mx-auto scroll-reveal">
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+            {/* Projetos reais */}
+            {currentProjects.map((project, index) => (
               <div
                 key={project.id}
                 className="group bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-200 dark:border-gray-800"
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 {/* Project Image */}
-                <div className="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
+                <div
+                  className="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer"
+                  onClick={() => setSelectedImage({ src: project.image, title: project.title })}
+                >
                   <img
                     src={project.image}
                     alt={project.title}
@@ -81,6 +169,17 @@ export const Projects = () => {
                       Destaque
                     </div>
                   )}
+                  {/* Ícone de zoom ao passar o mouse */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                    <svg
+                      className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                    </svg>
+                  </div>
                 </div>
 
                 {/* Project Info */}
@@ -151,15 +250,101 @@ export const Projects = () => {
                 </div>
               </div>
             ))}
+
+            {/* Cards "Em breve" para preencher slots vazios */}
+            {Array.from({ length: emptySlots }).map((_, index) => (
+              <div
+                key={`empty-${index}`}
+                className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg border-2 border-dashed border-gray-300 dark:border-gray-700"
+                style={{ transitionDelay: `${(currentProjects.length + index) * 100}ms` }}
+              >
+                {/* Área da imagem - mesmo tamanho dos projetos reais */}
+                <div className="relative aspect-video overflow-hidden bg-gray-50 dark:bg-gray-800/50 border-b-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center">
+                  <div className="text-6xl">🚀</div>
+                </div>
+
+                {/* Área de informações - mesmo padding dos projetos reais */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-gray-400 dark:text-gray-600 mb-3">
+                    Em breve
+                  </h3>
+                  <p className="text-gray-400 dark:text-gray-600 mb-4">
+                    Novos projetos em desenvolvimento
+                  </p>
+
+                  {/* Espaço para manter a mesma altura */}
+                  <div className="flex flex-wrap gap-2 mb-4 opacity-0">
+                    <span className="px-3 py-1 text-sm">.</span>
+                  </div>
+                  <div className="flex gap-4 opacity-0">
+                    <span>.</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* More Projects CTA */}
-        <div className="text-center mt-12">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Mais projetos em breve...
-          </p>
-        </div>
+        {/* Paginação com bolinhas */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-3 mt-12">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  currentPage === index
+                    ? 'w-3 h-3 bg-primary-600'
+                    : 'w-2.5 h-2.5 bg-gray-300 dark:bg-gray-600 hover:bg-primary-400 dark:hover:bg-primary-500'
+                }`}
+                aria-label={`Ir para página ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Modal de Imagem */}
+        {selectedImage && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div className="relative max-w-7xl max-h-[90vh] w-full">
+              {/* Botão Fechar */}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-white hover:text-primary-400 transition-colors"
+              >
+                <svg
+                  className="w-10 h-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              {/* Imagem */}
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.title}
+                className="w-full h-full object-contain rounded-lg shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+
+              {/* Título */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
+                <h3 className="text-white text-2xl font-bold">{selectedImage.title}</h3>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
