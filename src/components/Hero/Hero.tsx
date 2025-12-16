@@ -1,4 +1,13 @@
+import { useTypingEffect } from '../../hooks/useTypingEffect';
+
 export const Hero = () => {
+  const { displayText, showCursor } = useTypingEffect({
+    text: 'Erick Santos',
+    typingSpeed: 150,
+    deletingSpeed: 100,
+    pauseDuration: 2000,
+  });
+
   return (
     <section
       id="home"
@@ -13,10 +22,16 @@ export const Hero = () => {
             </span>
           </div>
 
-          {/* Name */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 animate-scale-in">
-            <span className="text-gray-900 dark:text-white inline-block hover:scale-110 transition-transform duration-300">
-              Erick Santos
+          {/* Name com efeito de digitação */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 animate-scale-in min-h-[5rem] md:min-h-[7rem] lg:min-h-[8rem] flex items-center justify-center">
+            <span className="text-gray-900 dark:text-white font-mono">
+              {displayText}
+              <span
+                className={`inline-block w-1 h-[0.9em] bg-primary-600 ml-1 align-middle ${
+                  showCursor ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ transition: 'opacity 0.1s' }}
+              />
             </span>
           </h1>
 
